@@ -1,0 +1,8 @@
+chain_commands:
+  foo:hello:
+    - bar:hi:
+        arguments: { "-f": "Mike", "--male": ~, somearg: 'test value' }
+    - bar:hi:
+        arguments: { "-f": "Mike", "--male": ~, somearg: 'test value' }
+#    list:
+#      arguments: { }
