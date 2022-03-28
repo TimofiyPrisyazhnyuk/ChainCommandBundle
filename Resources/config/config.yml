@@ -1,8 +1,11 @@
-chain_commands:
-  foo:hello:
-    - bar:hi:
-        arguments: { "-f": "Mike", "--male": ~, somearg: 'test value' }
-    - bar:hi:
-        arguments: { "-f": "Mike", "--male": ~, somearg: 'test value' }
-#    list:
-#      arguments: { }
+timofiy_chain_command:
+  detailed_logging: # is detailed logging enabled
+    enabled: true
+  chain_commands:
+    foo:hello:  # root command name
+      - bar:hi:  # member command name
+          arguments: { }  # arguments: { "-arg": "value", "--argWithoutVal": ~, "key": 'example value' }
+          sort_index: 16  # sort_index: int - for sorting member commands
+      - bar:hi:
+          arguments: { }
+          sort_index: 12

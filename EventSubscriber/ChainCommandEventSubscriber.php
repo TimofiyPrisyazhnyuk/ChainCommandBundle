@@ -2,12 +2,15 @@
 
 namespace App\Bundle\ChainCommandBundle\EventSubscriber;
 
-use App\Bundle\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
 use App\Bundle\ChainCommandBundle\Manager\ChainCommandManager;
+use LogicException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ChainCommandEventSubscriber implements EventSubscriberInterface
 {
     /**
-     * CommandSubscriber constructor
+     * ChainCommandEventSubscriber constructor
      *
      * @param LoggerInterface $logger
      * @param ChainCommandManager $chainCommandManager
@@ -47,28 +50,33 @@ class ChainCommandEventSubscriber implements EventSubscriberInterface
      * Before console command subscriber event
      *
      * @param ConsoleCommandEvent $event
-     * @throws InvalidChainCommandMemberException
      */
     public function beforeCommand(ConsoleCommandEvent $event): void
     {
         $command = $event->getCommand();
-        if ($this->chainCommandManager->isMemberCommand($command->getName())) {
-            throw new InvalidChainCommandMemberException($command->getName());
+        $rootCommand = $this->chainCommandManager->getRootForMember($command->getName());
+        if (!empty($rootCommand)) {
+            $event->getOutput()->writeln(sprintf(
+                'Error: %s command is a member of %s command chain and cannot be executed on its own.',
+                $command->getName(), $rootCommand
+            ));
+            $event->disableCommand();
+            return;
         }
 
         if ($this->chainCommandManager->isRootCommand($command->getName())) {
-            $this->logger->info(
-                sprintf(
-                    '%s is a master command of a command chain that has registered member commands',
-                    $command->getName()
-                )
+            $this->formatLog(
+                '%s is a master command of a command chain that has registered member commands',
+                [$command->getName()]
             );
-            foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand => $arguments) {
-                $this->logger->info(
-                    sprintf('%s registered as a member of %s command chain', $memberCommand, $command->getName())
+
+            foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand) {
+                $this->formatLog(
+                    '%s registered as a member of %s command chain',
+                    [$memberCommand[ChainCommandManager::MEMBER_COMMAND], $command->getName()]
                 );
             }
-            $this->logger->info(sprintf('Executing %s command itself first:', $command->getName()));
+            $this->formatLog('Executing %s command itself first:', [$command->getName()]);
         }
     }
 
@@ -80,22 +88,53 @@ class ChainCommandEventSubscriber implements EventSubscriberInterface
     public function afterCommand(ConsoleTerminateEvent $event): void
     {
         $command = $event->getCommand();
-        if (!$this->chainCommandManager->isRootCommand($command->getName())) {
+        if (!$this->chainCommandManager->isRootCommand($command?->getName())) {
             return;
         }
+        $this->formatLog('Executing %s chain members:', [$command->getName()]);
+        // Run all member commands
+        $this->executeMembersCommand($event, $command);
+        $this->formatLog('Execution of %s chain completed.', [$command->getName()]);
+    }
 
-        $this->logger->info(sprintf('Executing %s chain members:', $command->getName()));
+    /**
+     * Method executeMembersCommand
+     *
+     * @param ConsoleTerminateEvent $event
+     * @param Command $command
+     *
+     * @return void
+     */
+    protected function executeMembersCommand(ConsoleTerminateEvent $event, Command $command): void
+    {
         $application = $command->getApplication();
-
-        foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand => $arguments) {
+        if (null === $application) {
+            throw new LogicException('Failed to determine application for console command');
+        }
+        foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand) {
             $bufferedOutput = $this->getBufferedOutput();
-            $application->get($memberCommand)->run($event->getInput(), $bufferedOutput);
+            $application->get($memberCommand[ChainCommandManager::MEMBER_COMMAND])
+                ->run($this->getArrayInput($memberCommand), $bufferedOutput);
             $outputMessage = $bufferedOutput->fetch();
-            $event->getOutput()->writeln($outputMessage);
+            $event->getOutput()->write($outputMessage);
             $this->logger->info($outputMessage);
         }
+    }
 
-        $this->logger->info(sprintf('Execution of %s chain completed.', $command->getName()));
+    /**
+     * Method formatLog
+     *
+     * @param string $message
+     * @param array $arguments
+     *
+     * @return void
+     */
+    protected function formatLog(string $message, array $arguments): void
+    {
+        if (!$this->chainCommandManager->getIsDetailedLoggingEnabled()) {
+            return;
+        }
+        $this->logger->info(sprintf($message, ...$arguments));
     }
 
     /**
@@ -103,8 +142,20 @@ class ChainCommandEventSubscriber implements EventSubscriberInterface
      *
      * @return OutputInterface
      */
-    private function getBufferedOutput(): OutputInterface
+    protected function getBufferedOutput(): OutputInterface
     {
         return new BufferedOutput();
+    }
+
+    /**
+     * Method getBufferedOutput
+     *
+     * @param array $memberCommand
+     *
+     * @return InputInterface
+     */
+    protected function getArrayInput(array $memberCommand): InputInterface
+    {
+        return new ArrayInput($memberCommand[ChainCommandManager::ARGUMENTS_OPTION]);
     }
 }

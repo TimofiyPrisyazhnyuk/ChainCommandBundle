@@ -23,12 +23,14 @@ class ChainCommandExtension extends Extension
     {
         $configs = Yaml::parse(file_get_contents(__DIR__ . '/../Resources/config/config.yml'));
         $configuration = new Configuration();
-        die(var_dump($configs));
         $commandChainsConfig = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        if (empty($commandChainsConfig[Configuration::CHAIN_COMMANDS])) {
+            return;
+        }
         $this->loadChainConfiguration($container, $commandChainsConfig);
     }
 
@@ -43,12 +45,20 @@ class ChainCommandExtension extends Extension
     protected function loadChainConfiguration(ContainerBuilder $container, array $commandChains): void
     {
         $definition = $container->getDefinition('chain_command.manager');
-        foreach ($commandChains as $rootCommand => $memberCommands) {
-            foreach ($memberCommands as $subCommandName => $subCommandArgs) {
+        if (isset($commandChains[Configuration::DETAILED_LOGGING][Configuration::ENABLED])) {
+            $definition->addMethodCall(
+                'setIsLoggingEnabled',
+                [(bool)$commandChains[Configuration::DETAILED_LOGGING][Configuration::ENABLED]]
+            );
+        }
+        foreach ($commandChains[Configuration::CHAIN_COMMANDS] as $rootCommand => $memberCommands) {
+            foreach ($memberCommands as $subCommand) {
+                $memberCommandName = key($subCommand);
                 $definition->addMethodCall('putCommandToChain', [
                     $rootCommand,
-                    $subCommandName,
-                    $subCommandArgs[Configuration::ARGUMENTS_OPTION]
+                    $memberCommandName,
+                    $subCommand[$memberCommandName][Configuration::ARGUMENTS_OPTION],
+                    (int)$subCommand[$memberCommandName][Configuration::SORT_INDEX_OPTION]
                 ]);
             }
         }

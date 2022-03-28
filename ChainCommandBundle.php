@@ -14,8 +14,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class ChainCommandBundle extends Bundle
 {
     /**
-     * @param ContainerBuilder $container
-     * @return void
+     * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {
