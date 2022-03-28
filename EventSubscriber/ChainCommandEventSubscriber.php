@@ -54,29 +54,29 @@ class ChainCommandEventSubscriber implements EventSubscriberInterface
     public function beforeCommand(ConsoleCommandEvent $event): void
     {
         $command = $event->getCommand();
-        $rootCommand = $this->chainCommandManager->getRootForMember($command->getName());
+        $commandName = $command->getName();
+        $rootCommand = $this->chainCommandManager->getFirstRootForMember($commandName);
         if (!empty($rootCommand)) {
             $event->getOutput()->writeln(sprintf(
                 'Error: %s command is a member of %s command chain and cannot be executed on its own.',
-                $command->getName(), $rootCommand
+                $commandName, $rootCommand
             ));
             $event->disableCommand();
             return;
         }
-
-        if ($this->chainCommandManager->isRootCommand($command->getName())) {
+        if ($this->chainCommandManager->isRootCommand($commandName)) {
             $this->formatLog(
                 '%s is a master command of a command chain that has registered member commands',
-                [$command->getName()]
+                [$commandName]
             );
 
-            foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand) {
+            foreach ($this->chainCommandManager->getMembersForRoot($commandName) as $memberCommand) {
                 $this->formatLog(
                     '%s registered as a member of %s command chain',
-                    [$memberCommand[ChainCommandManager::MEMBER_COMMAND], $command->getName()]
+                    [$memberCommand[ChainCommandManager::MEMBER_COMMAND], $commandName]
                 );
             }
-            $this->formatLog('Executing %s command itself first:', [$command->getName()]);
+            $this->formatLog('Executing %s command itself first:', [$commandName]);
         }
     }
 
@@ -109,7 +109,7 @@ class ChainCommandEventSubscriber implements EventSubscriberInterface
     {
         $application = $command->getApplication();
         if (null === $application) {
-            throw new LogicException('Failed to determine application for console command');
+            throw new LogicException('Failed to determine application for console command event');
         }
         foreach ($this->chainCommandManager->getMembersForRoot($command->getName()) as $memberCommand) {
             $bufferedOutput = $this->getBufferedOutput();

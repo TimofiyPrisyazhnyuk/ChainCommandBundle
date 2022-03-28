@@ -11,7 +11,7 @@ use App\Bundle\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
  * @author Timofiy Prisyazhnyuk <timofiyprisyazhnyuk@gmail.com>
  * @version 1.0
  */
-class ChainCommandManager
+class ChainCommandManager implements ChainCommandManagerInterface
 {
     /**
      * @const string
@@ -77,6 +77,16 @@ class ChainCommandManager
     }
 
     /**
+     * Method getRawChainCommands
+     *
+     * @return array
+     */
+    public function getRawChainCommands(): array
+    {
+        return $this->chainCommands;
+    }
+
+    /**
      * Method setIsLoggingEnabled
      *
      * @param bool $isEnabled
@@ -109,13 +119,13 @@ class ChainCommandManager
     }
 
     /**
-     * Get root command for member
+     * Get first root command for member
      *
      * @param string $memberCommand
      *
      * @return string
      */
-    public function getRootForMember(string $memberCommand): string
+    public function getFirstRootForMember(string $memberCommand): string
     {
         foreach ($this->chainCommands as $rootCommand => $member) {
             $memberCommandList = array_column($member, static::MEMBER_COMMAND);
@@ -175,7 +185,7 @@ class ChainCommandManager
         if ($this->isRootCommand($memberCommand)) {
             throw  new InvalidChainCommandMemberException($memberCommand);
         }
-        if (!empty($this->getRootForMember($rootCommand))) {
+        if (!empty($this->getFirstRootForMember($rootCommand))) {
             throw  new InvalidChainCommandMemberException($rootCommand);
         }
     }
