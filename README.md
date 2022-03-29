@@ -10,15 +10,17 @@ Installation
 
 ###Step 1:
 
+Via composer
+
 ```bash
-$ composer require "timofiy/chain-command-bundle": "*"
+ composer require "timofiy/chain-command-bundle": "*"
 ```
 
 ###Step 2:
 
 Add bundle to "./config/bundles.php"
 
-```bash
+```php
 <?php
 
 return [
@@ -33,16 +35,16 @@ return [
 If you want to use Dynamically command chain with ChainCommandManager service:
 - Create alias in "./config/services.yaml"
 
-```bash
+```php
 Timofiy\ChainCommandBundle\Manager\ChainCommandManager: "@chain_command.manager"
 ```
 
 Usage
 ======
 
-1. Dynamic: specifying chains in config files (in "./config")
+1. Dynamic: "ChainCommandManager::putToChain"
 
-```bash
+```php
    /**
      * Some constructor
      *
@@ -56,9 +58,9 @@ Usage
 ```
 
 
-3. Static: specifying chains in config files (in "./config")
+2. Static: specifying chains in config files (in "./config")
 
-```bash
+```yaml
 timofiy_chain_command:
   detailed_logging: # is detailed logging enabled
     enabled: true
@@ -72,3 +74,10 @@ timofiy_chain_command:
           sort_index: 12
 ```
 
+Demonstration
+=============
+
+##You can install demonstration symfony bundles:
+
+- https://github.com/timofiyprisyazhnyuk/BarBundle
+- https://github.com/timofiyprisyazhnyuk/FooBundle
