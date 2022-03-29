@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Tests\Unit\EventSubscriber;
+namespace Timofiy\ChainCommandBundle\Tests\Unit\EventSubscriber;
 
-use App\Bundle\ChainCommandBundle\EventSubscriber\ChainCommandEventSubscriber;
-use App\Bundle\ChainCommandBundle\Manager\ChainCommandManager;
+use Timofiy\ChainCommandBundle\EventSubscriber\ChainCommandEventSubscriber;
+use Timofiy\ChainCommandBundle\Manager\ChainCommandManager;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

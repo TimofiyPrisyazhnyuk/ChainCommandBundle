@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Tests\Functional\Manager;
+namespace Timofiy\ChainCommandBundle\Tests\Functional\Manager;
 
-use App\Bundle\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
-use App\Bundle\ChainCommandBundle\Manager\ChainCommandManager;
+use Timofiy\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
+use Timofiy\ChainCommandBundle\Manager\ChainCommandManager;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Manager;
+namespace Timofiy\ChainCommandBundle\Manager;
 
 /**
  * Interface  ChainCommandManagerInterface

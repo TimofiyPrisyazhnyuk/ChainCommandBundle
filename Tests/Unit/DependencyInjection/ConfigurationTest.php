@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Tests\Unit\DependencyInjection;
+namespace Timofiy\ChainCommandBundle\Tests\Unit\DependencyInjection;
 
-use App\Bundle\ChainCommandBundle\DependencyInjection\Configuration;
+use Timofiy\ChainCommandBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;

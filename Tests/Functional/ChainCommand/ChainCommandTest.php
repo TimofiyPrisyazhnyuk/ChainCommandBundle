@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Tests\Functional\ChainCommand;
+namespace Timofiy\ChainCommandBundle\Tests\Functional\ChainCommand;
 
-use App\Bundle\ChainCommandBundle\Command\TestCommands\ChainCommandMemberTestCommand;
-use App\Bundle\ChainCommandBundle\Command\TestCommands\ChainCommandRootTestCommand;
-use App\Bundle\ChainCommandBundle\Command\TestCommands\ChainCommandTestCommand;
-use App\Bundle\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
-use App\Bundle\ChainCommandBundle\Manager\ChainCommandManager;
-use App\Bundle\ChainCommandBundle\Manager\ChainCommandManagerInterface;
+use Timofiy\ChainCommandBundle\Command\TestCommands\ChainCommandMemberTestCommand;
+use Timofiy\ChainCommandBundle\Command\TestCommands\ChainCommandRootTestCommand;
+use Timofiy\ChainCommandBundle\Command\TestCommands\ChainCommandTestCommand;
+use Timofiy\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
+use Timofiy\ChainCommandBundle\Manager\ChainCommandManager;
+use Timofiy\ChainCommandBundle\Manager\ChainCommandManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;

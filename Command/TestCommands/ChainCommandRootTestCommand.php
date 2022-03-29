@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Command\TestCommands;
+namespace Timofiy\ChainCommandBundle\Command\TestCommands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

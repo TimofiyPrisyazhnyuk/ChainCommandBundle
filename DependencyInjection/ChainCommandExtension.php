@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\DependencyInjection;
+namespace Timofiy\ChainCommandBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class ChainCommandExtension
@@ -21,7 +20,6 @@ class ChainCommandExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configs = Yaml::parse(file_get_contents(__DIR__ . '/../Resources/config/config.yml'));
         $configuration = new Configuration();
         $commandChainsConfig = $this->processConfiguration($configuration, $configs);
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Manager;
+namespace Timofiy\ChainCommandBundle\Manager;
 
-use App\Bundle\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
+use Timofiy\ChainCommandBundle\Exception\InvalidChainCommandMemberException;
 
 /**
  * Class ChainCommandManager

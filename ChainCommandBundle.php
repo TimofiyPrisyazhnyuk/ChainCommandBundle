@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle;
+namespace Timofiy\ChainCommandBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;

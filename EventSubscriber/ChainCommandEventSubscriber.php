@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\EventSubscriber;
+namespace Timofiy\ChainCommandBundle\EventSubscriber;
 
-use App\Bundle\ChainCommandBundle\Manager\ChainCommandManager;
+use Timofiy\ChainCommandBundle\Manager\ChainCommandManager;
 use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;

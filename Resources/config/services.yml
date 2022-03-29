@@ -1,9 +1,9 @@
 services:
   chain_command.manager:
-    class: App\Bundle\ChainCommandBundle\Manager\ChainCommandManager
+    class: Timofiy\ChainCommandBundle\Manager\ChainCommandManager
 
   chain_command.subscriber:
-    class: App\Bundle\ChainCommandBundle\EventSubscriber\ChainCommandEventSubscriber
+    class: Timofiy\ChainCommandBundle\EventSubscriber\ChainCommandEventSubscriber
     arguments: [ '@chain_command.manager', '@logger' ]
     tags:
       - { name: kernel.event_subscriber, event: console.command }

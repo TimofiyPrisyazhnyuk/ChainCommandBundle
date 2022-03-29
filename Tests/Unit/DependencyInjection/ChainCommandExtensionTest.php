@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Tests\Unit\DependencyInjection;
+namespace Timofiy\ChainCommandBundle\Tests\Unit\DependencyInjection;
 
-use App\Bundle\ChainCommandBundle\DependencyInjection\ChainCommandExtension;
+use Timofiy\ChainCommandBundle\DependencyInjection\ChainCommandExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

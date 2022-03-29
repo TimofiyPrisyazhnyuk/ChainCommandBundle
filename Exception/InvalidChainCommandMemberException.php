@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Bundle\ChainCommandBundle\Exception;
+namespace Timofiy\ChainCommandBundle\Exception;
 
 use Exception;
 
