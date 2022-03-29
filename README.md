@@ -13,7 +13,7 @@ Installation
 Via composer
 
 ```bash
- composer require "timofiy/chain-command-bundle": "*"
+ composer require "timofiyprisyazhnyuk/chain-command-bundle": "*"
 ```
 
 ###Step 2:
